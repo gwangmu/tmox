@@ -16,17 +16,21 @@ if ! ps -p $BASH_PID >/dev/null 2>&1; then
 fi
 
 exec 10<>stdin
-#exec 11<>stdout
-#exec 12<>stderr
+exec 11<>stdout
+exec 12<>stderr
 
 #clear
 
 #tail -f stdout &
 #tail -f stderr >&2 &
-gdb -p $BASH_PID \
-  -ex 'p dup2(open($CUR_TTY, 1089, 0640), 1)' \
-  -ex 'p dup2(open($CUR_TTY, 1089, 0640), 2)' \
-  -ex 'q'
+echo $CUR_TTY $BASH_PID
+cat <<EOF >.gdb.cmd
+p dup2(open("$CUR_TTY", 1089, 0640), 1)
+p dup2(open("$CUR_TTY", 1089, 0640), 2)
+q
+EOF
+sudo gdb -p $BASH_PID -x .gdb.cmd 
+#p dup2(open("$CUR_TTY", 1089, 0640), 0)
 
 while IFS= read -r prompt; do 
   echo $prompt >&10 

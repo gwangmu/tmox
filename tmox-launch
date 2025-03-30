@@ -8,10 +8,11 @@ rm -f stdin stdout stderr
 mkfifo stdin 
 touch stdout stderr
 
-exec 0<>stdin
-exec 1<>stdout
-exec 2<>stderr
+exec 10<>stdin
+exec 11<>stdout
+exec 12<>stderr
 
-nohup bash -i -s <&0 >&1 2>&2 & 
-echo $! > .bash.pid
-echo "info: bash launched. (pid: $(cat .bash.pid))"
+nohup bash -i -s <&10 >&11 2>&12 & 
+BASH_PID=$! 
+echo $BASH_PID > .bash.pid
+echo "info: bash launched. (pid: $BASH_PID)"
