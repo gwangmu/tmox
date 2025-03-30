@@ -4,8 +4,14 @@ set -eu
 
 CUR_TTY=$(tty)
 BASH_PID=$(cat .bash.pid)
+
 if [[ -z "$BASH_PID" ]]; then
   echo "error: background bash not found."
+  exit
+fi
+
+if ! ps -p $BASH_PID >/dev/null 2>&1; then
+  echo "error: bash not exists."
   exit
 fi
 
@@ -13,14 +19,14 @@ exec 10<>stdin
 #exec 11<>stdout
 #exec 12<>stderr
 
-clear
+#clear
 
 #tail -f stdout &
 #tail -f stderr >&2 &
 gdb -p $BASH_PID \
-  -ex p dup2(open($CUR_TTY, 1089, 0640), 1) \
-  -ex p dup2(open($CUR_TTY, 1089, 0640), 2) \
-  -ex q
+  -ex 'p dup2(open($CUR_TTY, 1089, 0640), 1)' \
+  -ex 'p dup2(open($CUR_TTY, 1089, 0640), 2)' \
+  -ex 'q'
 
 while IFS= read -r prompt; do 
   echo $prompt >&10 

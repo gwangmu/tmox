@@ -1,7 +1,11 @@
-#!/bin/bash -i
+#!/bin/bash
+
+set -eu
+
+rm -f .bash.pid
 
 rm -f stdin stdout stderr
-mkfifo stdin
+mkfifo stdin 
 touch stdout stderr
 
 exec 0<>stdin
