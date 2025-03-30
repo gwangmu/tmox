@@ -8,16 +8,16 @@ ATTACH_PID=$$
 TARGET_BASH_PID=$(cat $SPID_PATH)
 
 if [[ -z "$TARGET_BASH_PID" ]]; then
-  echo "$0: error: background bash not found."
+  echo "$SCRIPT_NAME: error: background bash not found."
   exit
 fi
 
 if ! ps -p $TARGET_BASH_PID >/dev/null 2>&1; then
-  echo "$0: error: bash not exists."
+  echo "$SCRIPT_NAME: error: bash not exists."
   exit
 fi
 
-echo "$0: attaching..."
+echo "$SCRIPT_NAME: attaching..."
 
 exec 10<>$STDIN_PATH
 exec 11<>$STDOUT_PATH
@@ -37,7 +37,7 @@ exec 12<>$STDERR_PATH
 PRINTER_PID=$!
 
 trap 'kill $PRINTER_PID' EXIT
-trap 'echo; echo "$0: detaching..."; exit' SIGINT
+trap 'echo; echo "$SCRIPT_NAME: detached."; exit' SIGINT
 
 while IFS= read -srn1 prompt; do
   if [[ $prompt == "" ]]; then

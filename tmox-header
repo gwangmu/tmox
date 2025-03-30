@@ -1,5 +1,6 @@
 #!/bin/bash
 
+SCRIPT_NAME=${0##*/}
 TMOX_ROOT="$HOME/.tmox"
 STDIN_PATH="$TMOX_ROOT/stdin"
 STDOUT_PATH="$TMOX_ROOT/stdout"

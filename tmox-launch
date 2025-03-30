@@ -5,7 +5,7 @@ set -eu
 source $(dirname $(realpath ${BASH_SOURCE[0]}))/tmox-header
 
 if [[ -f $SPID_PATH ]] && ps -p $(cat $SPID_PATH) >/dev/null 2>&1; then
-  echo "$0: error: bash already launched."
+  echo "$SCRIPT_NAME: error: bash already launched. (pid: $(cat $SPID_PATH))"
   exit
 fi
 
@@ -31,4 +31,4 @@ nohup script --return --quiet \
   /dev/null <&10 >&11 2>&12 & 
 BASH_PID=$! 
 echo $BASH_PID > $SPID_PATH 
-echo "info: bash launched. (pid: $BASH_PID)"
+echo "$SCRIPT_NAME: bash launched. (pid: $BASH_PID)"
