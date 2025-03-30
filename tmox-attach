@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -eu
+
+#BASH_PID=$(cat .bash.pid)
+#if [[ -z "$BASH_PID" ]]; then
+#  echo "error: background bash not found."
+#  exit
+#fi
+
+exec 10<>stdin
+#exec 11<>stdout
+#exec 12<>stderr
+
+clear
+
+tail -f stdout &
+tail -f stderr >&2 &
+
+while IFS= read -r prompt; do 
+  echo $prompt >&10 
+done 
