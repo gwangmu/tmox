@@ -22,15 +22,20 @@ exec 10<>stdin
 exec 11<>stdout
 exec 12<>stderr
 
-tail --pid $TARGET_BASH_PID -f stdout &
-STDOUT_PID=$!
-tail --pid $TARGET_BASH_PID -f stderr >&2 &
-STDERR_PID=$!
+(
+  trap 'kill 0' EXIT
 
-wait $STDOUT_PID
-kill -SIGINT $ATTACH_PID 
+  tail --pid $TARGET_BASH_PID -f stdout &
+  STDOUT_PID=$!
+  tail --pid $TARGET_BASH_PID -f stderr >&2 &
+  STDERR_PID=$!
 
-trap 'kill -9 $STDOUT_PID $STDERR_PID' EXIT
+  wait $STDOUT_PID
+  kill -SIGINT $ATTACH_PID 
+) &
+PRINTER_PID=$!
+
+trap 'kill $PRINTER_PID' EXIT
 trap 'echo; echo "$0: detaching..."; exit' SIGINT
 
 while IFS= read -srn1 prompt; do
