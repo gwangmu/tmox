@@ -2,8 +2,11 @@
 
 rm -f stdin stdout stderr
 mkfifo stdin
+touch stdout stderr
 
 exec 0<>stdin
+exec 1<>stdout
+exec 2<>stderr
 
 nohup bash -i -s <&0 >&1 2>&2 & 
 echo $! > .bash.pid
