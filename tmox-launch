@@ -19,8 +19,15 @@ exec 10<>$STDIN_PATH
 exec 11<>$STDOUT_PATH
 exec 12<>$STDERR_PATH
 
+# TODO: resize row/col when the terminal changes.
+# For now, it's the initial dimension.
+NUM_ROWS_ORG=$(stty size | cut -d' ' -f1)
+NUM_COLS_ORG=$(stty size | cut -d' ' -f2)
+
 nohup script --return --quiet \
-  -c 'bash --rcfile <(cat ~/.bashrc; echo '"'"'PS1="${PS1:-}[tmox] "'"'"') -i -s' \
+  -c 'bash --rcfile <(cat ~/.bashrc; \
+      echo '"'"'PS1="${PS1:-}[tmox] "'"'"';
+      stty rows '"$NUM_ROWS_ORG"' cols '"$NUM_COLS_ORG"') -i -s' \
   /dev/null <&10 >&11 2>&12 & 
 BASH_PID=$! 
 echo $BASH_PID > $SPID_PATH 
