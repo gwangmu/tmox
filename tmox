@@ -1,16 +1,105 @@
 #!/bin/bash
 
 set -eu
+SCRIPT_NAME=${0##*/}
 
-source $(dirname $(realpath ${BASH_SOURCE[0]}))/tmox-header
+# Header data
+TMOX_ROOT="$HOME/.tmox"
+STDIN_PATH="$TMOX_ROOT/stdin"
+STDOUT_PATH="$TMOX_ROOT/stdout"
+STDERR_PATH="$TMOX_ROOT/stderr"
+SPID_PATH="$TMOX_ROOT/spid"
 
-SUBCMD_HEAD=$1
-shift
-EXEC_PATH="$(dirname $(realpath ${BASH_SOURCE[0]}))/tmox-$SUBCMD_HEAD"
+# Launch a new session.
+tmox::launch() {
+  mkdir -p $TMOX_ROOT
+  rm -rf $TMOX_ROOT/*
 
-if [[ ! -f $EXEC_PATH ]] || [[ $SUBCMD_HEAD == "header" ]]; then
-  echo "$0: error: subcommand not found."
-  exit
+  mkfifo $STDIN_PATH
+  touch $STDOUT_PATH $STDERR_PATH
+
+  exec 10<>$STDIN_PATH
+  exec 11<>$STDOUT_PATH
+  exec 12<>$STDERR_PATH
+
+  LAUNCH_SHELL='bash'
+  LAUNCH_LONG_OPTS=''
+  LAUNCH_SHORT_OPTS='-i -s'
+
+  if ! which script >/dev/null 2>&1; then
+    echo "$SCRIPT_NAME: warning: no 'script'. launching as a non-pty."
+    nohup $LAUNCH_SHELL $LAUNCH_LONG_OPTS $LAUNCH_SHORT_OPTS <&10 >&11 2>&12 & 
+  else
+    # TODO: resize row/col when the terminal changes.
+    # For now, it's the initial dimension.
+    NUM_ROWS_ORG=$(stty size | cut -d' ' -f1)
+    NUM_COLS_ORG=$(stty size | cut -d' ' -f2)
+
+    LAUNCH_LONG_OPTS="$LAUNCH_LONG_OPTS "'--rcfile <(cat '"$HOME"'/.bashrc; \
+        echo '"'"'PS1="${PS1:-}[tmox] "'"'"'; \
+        stty rows '"$NUM_ROWS_ORG"' cols '"$NUM_COLS_ORG"')'
+    nohup script --return --quiet \
+      -c "$LAUNCH_SHELL $LAUNCH_LONG_OPTS $LAUNCH_SHORT_OPTS" /dev/null \
+      <&10 >&11 2>&12 & 
+  fi
+  BASH_PID=$! 
+  echo $BASH_PID > $SPID_PATH 
+
+  echo "$SCRIPT_NAME: bash launched. (pid: $BASH_PID)"
+}
+
+# Attach to an existing session.
+tmox::attach() {
+  ATTACH_PID=$$
+  TARGET_BASH_PID=$(cat $SPID_PATH)
+
+  if [[ -z "$TARGET_BASH_PID" ]] || ! ps -p $TARGET_BASH_PID >/dev/null 2>&1; then
+    echo "$SCRIPT_NAME: error: background bash not found."
+    exit
+  fi
+
+  echo "$SCRIPT_NAME: attaching..."
+
+  STTY_STATE=$(stty -g)
+  stty raw
+
+  (
+    trap 'kill 0' EXIT
+
+    tail --pid $TARGET_BASH_PID -f $STDOUT_PATH &
+    STDOUT_PID=$!
+    tail --pid $TARGET_BASH_PID -f $STDERR_PATH >&2 &
+    STDERR_PID=$!
+
+    wait $STDOUT_PID
+    kill -SIGHUP $ATTACH_PID 
+  ) &
+  PRINTER_PID=$!
+
+  # FIXME: why does 'stty' generate error?
+  trap 'printf $'"'"'\cC'"'"' >&20' SIGINT
+  trap 'echo "'"$SCRIPT_NAME"': detached."; \
+    stty '"$STTY_STATE"' >/dev/null 2>&1; \
+    exit 0;' \
+    SIGHUP
+
+  exec 20<>$STDIN_PATH
+  while IFS= read -srn1 ch; do
+    if [[ $ch == "" ]]; then
+      echo >&20
+    elif [[ $ch == $'\cQ' ]]; then
+      stty $STTY_STATE
+      kill $PRINTER_PID
+      echo; echo "$SCRIPT_NAME: detached."
+      exit 0
+    else
+      printf "$ch" >&20
+    fi
+  done
+}
+
+if [[ ! -f $SPID_PATH ]] || ! ps -p $(cat $SPID_PATH) >/dev/null 2>&1; then
+  tmox::launch
+else
+  tmox::attach
 fi
-
-bash $EXEC_PATH "$@"
