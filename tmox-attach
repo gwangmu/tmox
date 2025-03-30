@@ -30,6 +30,7 @@ p dup2(open("$CUR_TTY", 1089, 0640), 2)
 q
 EOF
 sudo gdb -p $BASH_PID -x .gdb.cmd 
+rm .gdb.cmd
 #p dup2(open("$CUR_TTY", 1089, 0640), 0)
 
 while IFS= read -r prompt; do 
