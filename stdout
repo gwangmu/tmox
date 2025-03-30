@@ -1,50 +1,1 @@
-[?2004h]0;gwangmu@gwangmu-M10090: ~/Scratch/tmox[01;32mgwangmu@gwangmu-M10090[00m:[01;34m~/Scratch/tmox[00m$ ls
-[?2004lstderr  [0m[40;33mstdin[0m  stdout  [01;32mtmox-attach[0m  [01;32mtmox-launch[0m
-[?2004h]0;gwangmu@gwangmu-M10090: ~/Scratch/tmox[01;32mgwangmu@gwangmu-M10090[00m:[01;34m~/Scratch/tmox[00m$ v[Kls /dev/pts
-[?2004l[0m[40;33;01m0[0m  [40;33;01m1[0m  [40;33;01m2[0m  [40;33;01m4[0m  [40;33;01m6[0m  [40;33;01mptmx[0m
-[?2004h]0;gwangmu@gwangmu-M10090: ~/Scratch/tmox[01;32mgwangmu@gwangmu-M10090[00m:[01;34m~/Scratch/tmox[00m$ ls
-[?2004lstderr  [0m[40;33mstdin[0m  stdout  [01;32mtmox-attach[0m  [01;32mtmox-launch[0m
-[?2004h]0;gwangmu@gwangmu-M10090: ~/Scratch/tmox[01;32mgwangmu@gwangmu-M10090[00m:[01;34m~/Scratch/tmox[00m$ vim tmox-attach 
-[?2004l[?1006;1000h[?1002h[?1049h[22;0;0t[>4;2m[?1h=[?2004h[?1004h[1;24r[?12h[?12l[22;2t[22;1t[27m[23m[29m[m[38;5;231m[48;5;236m[H[2J[?25l[24;1H[97m[41mE325: ATTENTION[m[38;5;231m[48;5;236m
-Found a swap file by the name ".tmox-attach.swp"
-[10Cowned by: gwangmu   dated: Sun Mar 30 17:01:26 2025
-[9Cfile name: ~gwangmu/Scratch/tmox/tmox-attach
-[10Cmodified: no
-[9Cuser name: gwangmu   host name: gwangmu-M10090
-[8Cprocess ID: 12029 (STILL RUNNING)
-While opening file "tmox-attach"
-[13Cdated: Sun Mar 30 17:01:22 2025
-
-(1) Another program may be editing the same file.  If this is the case,
-    be careful not to end up with two different instances of the same
-    file when making changes.  Quit, or continue with caution.
-(2) An edit session for this file crashed.
-    If this is the case, use ":recover" or "vim -r tmox-attach"
-    to recover the changes (see ":help recovery").
-    If you did this already, delete the swap file ".tmox-attach.swp"
-    to avoid this message.
-[?1006;1000l[?1002l
-[38;5;121mSwap file ".tmox-attach.swp" already exists![m[38;5;231m[48;5;236m
-[38;5;121m[O]pen Read-Only, (E)dit anyway, (R)ecover, (Q)uit, (A)bort: [?25h[?1006;1000h[?1002h[m[38;5;231m[48;5;236m[24;1H[K[?25l[24;1H"tmox-attach" [readonly] 49L, 794B[2;1H▽[6n[2;1H  [3;1HPzz\[0%m[6n[3;1H           [1;1H[>c]10;?]11;?[1;1H[1m[38;5;226m  1 [m[38;5;231m[48;5;236m[38;5;81m#!/bin/bash[m[38;5;231m[48;5;236m                                                                 [38;5;231m[48;5;236m[2;1H[38;5;226m  2 [m[38;5;231m[48;5;236m                                                                            [3;1H[38;5;226m  3 [m[38;5;231m[48;5;236m[1m[38;5;186mset[m[38;5;231m[48;5;236m[38;5;120m [m[38;5;231m[48;5;236m[38;5;222m-eu[m[38;5;231m[48;5;236m                                                                     [4;1H[38;5;226m  4 [m[38;5;231m[48;5;236m           
-[38;5;226m  5 [m[38;5;231m[48;5;236m[38;5;120mCUR_TTY[m[38;5;231m[48;5;236m=[38;5;167m$([m[38;5;231m[48;5;236m[38;5;222mtty[m[38;5;231m[48;5;236m[38;5;167m)[m[38;5;231m[48;5;236m                              
-[38;5;226m  6 [m[38;5;231m[48;5;236m[38;5;120mTARGET_BASH_PID[m[38;5;231m[48;5;236m=[38;5;167m$([m[38;5;231m[48;5;236m[38;5;222mcat .bash.pid[m[38;5;231m[48;5;236m[38;5;167m)[m[38;5;231m[48;5;236m                         
-[38;5;226m  7 [m[38;5;231m[48;5;236m[38;5;120mPARENT_BASH_PID[m[38;5;231m[48;5;236m=[38;5;167m$PPID[m[38;5;231m[48;5;236m                            
-[38;5;226m  8 [m[38;5;231m[48;5;236m                  
-[38;5;226m  9 [m[38;5;231m[48;5;236m[1m[38;5;186mif [m[38;5;231m[48;5;236m[38;5;222m[[[m[38;5;231m[48;5;236m [1m[38;5;186m-z[m[38;5;231m[48;5;236m [1m[38;5;186m"[m[38;5;231m[48;5;236m[38;5;167m$TARGET_BASH_PID[m[38;5;231m[48;5;236m[1m[38;5;186m"[m[38;5;231m[48;5;236m [38;5;222m]][m[38;5;231m[48;5;236m[1m[38;5;186m;[m[38;5;231m[48;5;236m [1m[38;5;186mthen[m[38;5;231m[48;5;236m               
-[38;5;226m 10 [m[38;5;231m[48;5;236m  [1m[38;5;186mecho[m[38;5;231m[48;5;236m[38;5;217m [m[38;5;231m[48;5;236m[1m[38;5;186m"[m[38;5;231m[48;5;236m[38;5;217merror: background bash not found.[m[38;5;231m[48;5;236m[1m[38;5;186m"[m[38;5;231m[48;5;236m
-[38;5;226m 11 [m[38;5;231m[48;5;236m  [1m[38;5;186mexit[m[38;5;231m[48;5;236m                      
-[38;5;226m 12 [m[38;5;231m[48;5;236m[1m[38;5;186mfi[m[38;5;231m[48;5;236m[7C                               
-[38;5;226m 13 
- 14 [m[38;5;231m[48;5;236m[1m[38;5;186mif ![m[38;5;231m[48;5;236m ps [1m[38;5;186m-p[m[38;5;231m[48;5;236m [38;5;167m$TARGET_BASH_PID[m[38;5;231m[48;5;236m [1m[38;5;186m>[m[38;5;231m[48;5;236m/dev/null [38;5;217m2[m[38;5;231m[48;5;236m[1m[38;5;186m>&[m[38;5;231m[48;5;236m[38;5;217m1[m[38;5;231m[48;5;236m[1m[38;5;186m;[m[38;5;231m[48;5;236m [1m[38;5;186mthen[m[38;5;231m[48;5;236m                  
-[38;5;226m 15 [m[38;5;231m[48;5;236m  [1m[38;5;186mecho[m[38;5;231m[48;5;236m[38;5;217m [m[38;5;231m[48;5;236m[1m[38;5;186m"[m[38;5;231m[48;5;236m[38;5;217merror: bash not exists.[m[38;5;231m[48;5;236m[1m[38;5;186m"[m[38;5;231m[48;5;236m                                 
-[38;5;226m 16 [m[38;5;231m[48;5;236m  [1m[38;5;186mexit[m[38;5;231m[48;5;236m                                                    
-[38;5;226m 17 [m[38;5;231m[48;5;236m[1m[38;5;186mfi[m[38;5;231m[48;5;236m                                    
-[38;5;226m 18 [m[38;5;231m[48;5;236m                                                           
-[38;5;226m 19 [m[38;5;231m[48;5;236m[38;5;81m#clear[m[38;5;231m[48;5;236m                                        
-[38;5;226m 20 [m[38;5;231m[48;5;236m                                                                
-[38;5;226m 21 [m[38;5;231m[48;5;236m[1m[38;5;186mexec[m[38;5;231m[48;5;236m [38;5;217m10[m[38;5;231m[48;5;236m[1m[38;5;186m<>[m[38;5;231m[48;5;236mstdin        
-[38;5;226m 22 [m[38;5;231m[48;5;236m[1m[38;5;186mexec[m[38;5;231m[48;5;236m [38;5;217m11[m[38;5;231m[48;5;236m[1m[38;5;186m<>[m[38;5;231m[48;5;236mstdout
-[38;5;237m[48;5;255mtmox-attach [RO]                                              1,1            Top[1;5H[?25h[?4m[?25l[m[38;5;231m[48;5;236m[24;70H^[[1;5H[?25h[?25l[24;70H  [1;5H[24;70H^[[1;5H[24;72H[[1;5H[24;73H>[1;5H[24;70H    [1;5H[24;70H^[[1;5H[24;72H[[1;5H[24;73H>[1;5H[24;74H6[1;5H[24;70H     [1;5H[?25h[?25l[24;70H76[1;5H[?25h[?25l[24;70H  [1;5H[?25h[?25l[24;70H1c[1;5H[?25h[?25l[24;72H^[[1;5H[24;72H  [1;5H[24;70H  [1;5H[?25h[?25l[24;70H;[1;5H[24;70H [1;5H[?25h[?25l[24;70Hr[1;5H[?25h[?25l[24;71Hg[1;5H[24;1H[1m[38;5;167mW10: Warning: Changing a readonly file[m[38;5;231m[48;5;236m[24;70H[K[?1006;1000l[?1002l[?1006;1000h[?1002h[1;5Hg!/bin/bash[38;5;231m[48;5;236m[23;14H[38;5;237m[48;5;255m+][RO][1;5H[?25h[?25l[m[38;5;231m[48;5;236m[24;1H[K[24;1H:d0d0/cfcf/cccc[38;5;112m^G[?25h[m[38;5;231m[48;5;236m:q[?25l[7m[38;5;196m[48;5;231mE939: Positive count required[1;5H[?25h[?25l[m[38;5;231m[48;5;236m[24;70H:[1;5H[24;1H[K[24;1H:[?25hq[?25l[7m[38;5;196m[48;5;231mE37: No write since last change (add ! to override)[1;5H[?25h[?25l[m[38;5;231m[48;5;236m[24;70H:[1;5H[24;1H[K[24;1H:[?25hq![?25l[?1006;1000l[?1002l[?2004l[>4;m[23;2t[23;1t[24;1H[K[24;1H[?1004l[?2004l[?1l>[?1049l[23;0;0t[?25h[>4;m[?2004h]0;gwangmu@gwangmu-M10090: ~/Scratch/tmox[01;32mgwangmu@gwangmu-M10090[00m:[01;34m~/Scratch/tmox[00m$ ls
-[?2004lstderr  [0m[40;33mstdin[0m  stdout  [01;32mtmox-attach[0m  [01;32mtmox-launch[0m
-[?2004h]0;gwangmu@gwangmu-M10090: ~/Scratch/tmox[01;32mgwangmu@gwangmu-M10090[00m:[01;34m~/Scratch/tmox[00m$ ex[K[Kexit
-[?2004lexit
+[?2004h]0;gwangmu@gwangmu-M10090: ~/Scratch/tmox[01;32mgwangmu@gwangmu-M10090[00m:[01;34m~/Scratch/tmox[00m$ [tmox] 

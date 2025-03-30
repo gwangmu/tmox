@@ -12,7 +12,9 @@ exec 10<>stdin
 exec 11<>stdout
 exec 12<>stderr
 
-nohup script --return --quiet -c 'bash -i -s' /dev/null <&10 >&11 2>&12 & 
-BASH_PID=$! 
-echo $BASH_PID > .bash.pid
-echo "info: bash launched. (pid: $BASH_PID)"
+nohup script --return --quiet \
+  -c 'bash --rcfile <(cat ~/.bashrc; echo '"'"'PS1="${PS1:-}[tmox] "'"'"') -i -s' \
+  /dev/null <&10 >&11 2>&12 & 
+SCRIPT_PID=$! 
+echo $SCRIPT_PID > .bash.pid
+echo "info: bash launched. (pid: $SCRIPT_PID)"

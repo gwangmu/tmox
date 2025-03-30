@@ -3,8 +3,8 @@
 set -eu
 
 CUR_TTY=$(tty)
+ATTACH_PID=$$
 TARGET_BASH_PID=$(cat .bash.pid)
-PARENT_BASH_PID=$PPID
 
 if [[ -z "$TARGET_BASH_PID" ]]; then
   echo "error: background bash not found."
@@ -16,20 +16,22 @@ if ! ps -p $TARGET_BASH_PID >/dev/null 2>&1; then
   exit
 fi
 
-#clear
+echo "$0: attaching..."
 
 exec 10<>stdin
 exec 11<>stdout
 exec 12<>stderr
 
-tail -f stdout &
+tail --pid $TARGET_BASH_PID -f stdout &
 STDOUT_PID=$!
-echo $STDOUT_PID
-
-tail -f stderr >&2 &
+tail --pid $TARGET_BASH_PID -f stderr >&2 &
 STDERR_PID=$!
 
+wait $STDOUT_PID
+kill -SIGINT $ATTACH_PID 
+
 trap 'kill -9 $STDOUT_PID $STDERR_PID' EXIT
+trap 'echo; echo "$0: detaching..."; exit' SIGINT
 
 while IFS= read -srn1 prompt; do
   if [[ $prompt == "" ]]; then
@@ -38,12 +40,3 @@ while IFS= read -srn1 prompt; do
     printf "$prompt" >&10
   fi
 done
-
-#cat <<EOF >.gdb.cmd
-#p dup2(open("$CUR_TTY", 1089, 0640), 0)
-#p dup2(open("$CUR_TTY", 1089, 0640), 1)
-#p dup2(open("$CUR_TTY", 1089, 0640), 2)
-#q
-#EOF
-#sudo gdb -p $TARGET_BASH_PID -x .gdb.cmd 
-#rm .gdb.cmd
