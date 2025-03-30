@@ -2,11 +2,12 @@
 
 set -eu
 
-#BASH_PID=$(cat .bash.pid)
-#if [[ -z "$BASH_PID" ]]; then
-#  echo "error: background bash not found."
-#  exit
-#fi
+CUR_TTY=$(tty)
+BASH_PID=$(cat .bash.pid)
+if [[ -z "$BASH_PID" ]]; then
+  echo "error: background bash not found."
+  exit
+fi
 
 exec 10<>stdin
 #exec 11<>stdout
@@ -14,8 +15,12 @@ exec 10<>stdin
 
 clear
 
-tail -f stdout &
-tail -f stderr >&2 &
+#tail -f stdout &
+#tail -f stderr >&2 &
+gdb -p $BASH_PID \
+  -ex p dup2(open($CUR_TTY, 1089, 0640), 1) \
+  -ex p dup2(open($CUR_TTY, 1089, 0640), 2) \
+  -ex q
 
 while IFS= read -r prompt; do 
   echo $prompt >&10 
