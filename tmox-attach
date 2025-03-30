@@ -2,32 +2,33 @@
 
 set -eu
 
-CUR_TTY=$(tty)
+source $(dirname $(realpath ${BASH_SOURCE[0]}))/tmox-header
+
 ATTACH_PID=$$
-TARGET_BASH_PID=$(cat .bash.pid)
+TARGET_BASH_PID=$(cat $SPID_PATH)
 
 if [[ -z "$TARGET_BASH_PID" ]]; then
-  echo "error: background bash not found."
+  echo "$0: error: background bash not found."
   exit
 fi
 
 if ! ps -p $TARGET_BASH_PID >/dev/null 2>&1; then
-  echo "error: bash not exists."
+  echo "$0: error: bash not exists."
   exit
 fi
 
 echo "$0: attaching..."
 
-exec 10<>stdin
-exec 11<>stdout
-exec 12<>stderr
+exec 10<>$STDIN_PATH
+exec 11<>$STDOUT_PATH
+exec 12<>$STDERR_PATH
 
 (
   trap 'kill 0' EXIT
 
-  tail --pid $TARGET_BASH_PID -f stdout &
+  tail --pid $TARGET_BASH_PID -f $STDOUT_PATH &
   STDOUT_PID=$!
-  tail --pid $TARGET_BASH_PID -f stderr >&2 &
+  tail --pid $TARGET_BASH_PID -f $STDERR_PATH >&2 &
   STDERR_PID=$!
 
   wait $STDOUT_PID

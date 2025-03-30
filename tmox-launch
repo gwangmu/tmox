@@ -2,19 +2,26 @@
 
 set -eu
 
-rm -f .bash.pid
+source $(dirname $(realpath ${BASH_SOURCE[0]}))/tmox-header
 
-rm -f stdin stdout stderr
-mkfifo stdin
-touch stdout stderr
+if [[ -f $SPID_PATH ]] && ps -p $(cat $SPID_PATH) >/dev/null 2>&1; then
+  echo "$0: error: bash already launched."
+  exit
+fi
 
-exec 10<>stdin
-exec 11<>stdout
-exec 12<>stderr
+mkdir -p $TMOX_ROOT
+rm -rf $TMOX_ROOT/*
+
+mkfifo $STDIN_PATH
+touch $STDOUT_PATH $STDERR_PATH
+
+exec 10<>$STDIN_PATH
+exec 11<>$STDOUT_PATH
+exec 12<>$STDERR_PATH
 
 nohup script --return --quiet \
   -c 'bash --rcfile <(cat ~/.bashrc; echo '"'"'PS1="${PS1:-}[tmox] "'"'"') -i -s' \
   /dev/null <&10 >&11 2>&12 & 
-SCRIPT_PID=$! 
-echo $SCRIPT_PID > .bash.pid
-echo "info: bash launched. (pid: $SCRIPT_PID)"
+BASH_PID=$! 
+echo $BASH_PID > $SPID_PATH 
+echo "info: bash launched. (pid: $BASH_PID)"
