@@ -3,36 +3,47 @@
 set -eu
 
 CUR_TTY=$(tty)
-BASH_PID=$(cat .bash.pid)
+TARGET_BASH_PID=$(cat .bash.pid)
+PARENT_BASH_PID=$PPID
 
-if [[ -z "$BASH_PID" ]]; then
+if [[ -z "$TARGET_BASH_PID" ]]; then
   echo "error: background bash not found."
   exit
 fi
 
-if ! ps -p $BASH_PID >/dev/null 2>&1; then
+if ! ps -p $TARGET_BASH_PID >/dev/null 2>&1; then
   echo "error: bash not exists."
   exit
 fi
+
+#clear
 
 exec 10<>stdin
 exec 11<>stdout
 exec 12<>stderr
 
-#clear
+tail -f stdout &
+STDOUT_PID=$!
+echo $STDOUT_PID
 
-#tail -f stdout &
-#tail -f stderr >&2 &
-echo $CUR_TTY $BASH_PID
-cat <<EOF >.gdb.cmd
-p dup2(open("$CUR_TTY", 1089, 0640), 1)
-p dup2(open("$CUR_TTY", 1089, 0640), 2)
-q
-EOF
-sudo gdb -p $BASH_PID -x .gdb.cmd 
-rm .gdb.cmd
+tail -f stderr >&2 &
+STDERR_PID=$!
+
+trap 'kill -9 $STDOUT_PID $STDERR_PID' EXIT
+
+while IFS= read -srn1 prompt; do
+  if [[ $prompt == "" ]]; then
+    echo >&10
+  else
+    printf "$prompt" >&10
+  fi
+done
+
+#cat <<EOF >.gdb.cmd
 #p dup2(open("$CUR_TTY", 1089, 0640), 0)
-
-while IFS= read -r prompt; do 
-  echo $prompt >&10 
-done 
+#p dup2(open("$CUR_TTY", 1089, 0640), 1)
+#p dup2(open("$CUR_TTY", 1089, 0640), 2)
+#q
+#EOF
+#sudo gdb -p $TARGET_BASH_PID -x .gdb.cmd 
+#rm .gdb.cmd
