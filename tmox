@@ -4,11 +4,11 @@ set -eu
 SCRIPT_NAME=${0##*/}
 
 # Header data
-TMOX_ROOT="$HOME/.tmox"
+TMOX_ROOT="/tmp/tmox/$USER/$(hostname)"
 STDIN_PATH="$TMOX_ROOT/stdin"
 STDOUT_PATH="$TMOX_ROOT/stdout"
 STDERR_PATH="$TMOX_ROOT/stderr"
-SPID_PATH="$TMOX_ROOT/spid"
+PID_PATH="$TMOX_ROOT/spid"
 
 # Launch a new session.
 tmox::launch() {
