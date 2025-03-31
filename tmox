@@ -60,11 +60,13 @@ tmox::attach() {
 
   echo "$SCRIPT_NAME: attaching..."
 
+  trap '' SIGINT
   STTY_STATE=$(stty -g)
   stty raw
 
   (
     trap 'kill 0' EXIT
+    trap '' SIGINT
 
     tail --pid $TARGET_BASH_PID -f $STDOUT_PATH &
     STDOUT_PID=$!
