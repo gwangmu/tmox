@@ -102,6 +102,5 @@ tmox::attach() {
 
 if [[ ! -f $SPID_PATH ]] || ! ps -p $(cat $SPID_PATH) >/dev/null 2>&1; then
   tmox::launch
-else
-  tmox::attach
 fi
+tmox::attach
