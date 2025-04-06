@@ -53,6 +53,12 @@ tmox::attach() {
   ATTACH_PID=$$
   TARGET_BASH_PID=$(cat $SPID_PATH)
 
+  exec 100<>$SPID_PATH
+  if ! flock -n 100; then
+    echo "$SCRIPT_NAME: error: cannot re-enter tmox."
+    exit 1
+  fi
+
   if [[ -z "$TARGET_BASH_PID" ]] || ! ps -p $TARGET_BASH_PID >/dev/null 2>&1; then
     echo "$SCRIPT_NAME: error: background bash not found."
     exit
