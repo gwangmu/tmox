@@ -23,6 +23,11 @@ A very simple example of this peculiar setup would be using a cluster as a non-a
 
  - Like [Tmux](https://github.com/tmux/tmux), Tmox doesn't save the shell across reboots; the detached shell will evaporate when the system that runs the detached shell shuts down or reboots.
 
+<details>
+<summary>Click here for technical details.</summary>
+Not yet
+</details>
+
 # Known Issues
 
  - It delivers some random keystrokes upon starting up `vim`.
