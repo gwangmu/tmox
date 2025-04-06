@@ -36,6 +36,7 @@ tmox::launch() {
     echo "$SCRIPT_NAME: warning: no 'script'. launching as a non-pty."
     nohup $LAUNCH_SHELL $LAUNCH_LONG_OPTS $LAUNCH_SHORT_OPTS <&10 >&11 2>&12 & 
   else
+    # Use 'script' to fake the shell as a regular pseudo-terminal.
     # TODO: resize row/col when the terminal changes.
     # For now, it's the initial dimension.
     NUM_ROWS_ORG=$(stty size | cut -d' ' -f1)
