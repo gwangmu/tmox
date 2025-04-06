@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -eum
 SCRIPT_NAME=${0##*/}
 
 # Header data
@@ -66,33 +66,31 @@ tmox::attach() {
 
   (
     trap 'kill 0' EXIT
-    trap '' SIGINT
 
     tail --pid $TARGET_BASH_PID -f $STDOUT_PATH &
     STDOUT_PID=$!
     tail --pid $TARGET_BASH_PID -f $STDERR_PATH >&2 &
     STDERR_PID=$!
 
+    trap 'ps -p '"$STDOUT_PID"' >/dev/null 2>&1 && kill 0' EXIT
+
     wait $STDOUT_PID
-    kill -SIGHUP $ATTACH_PID 
+    kill -HUP $ATTACH_PID
   ) &
   PRINTER_PID=$!
 
-  # FIXME: why does 'stty' generate error?
   trap 'printf $'"'"'\cC'"'"' >&20' SIGINT
-  trap 'echo "'"$SCRIPT_NAME"': detached."; \
-    stty '"$STTY_STATE"' >/dev/null 2>&1; \
-    exit 0;' \
-    SIGHUP
+  trap 'printf $'"'"'\c\\'"'"' >&20' SIGQUIT
+  trap 'printf $'"'"'\cZ'"'"' >&20' SIGTSTP
+  trap 'stty '"$STTY_STATE"'; echo "'"$SCRIPT_NAME"': detached."' EXIT
 
   exec 20<>$STDIN_PATH
   while IFS= read -srn1 ch; do
     if [[ $ch == "" ]]; then
       echo >&20
     elif [[ $ch == $'\cQ' ]]; then
-      stty $STTY_STATE
-      kill $PRINTER_PID
-      echo; echo "$SCRIPT_NAME: detached."
+      ps -p $PRINTER_PID >/dev/null 2>&1 && kill $PRINTER_PID
+      printf "\n\r"
       exit 0
     else
       printf "$ch" >&20
