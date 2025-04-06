@@ -18,3 +18,7 @@ A very simple example of this peculiar setup would be using a cluster as a non-a
  - Press <kbd>Ctrl</kbd>+<kbd>Q</kbd> to detach from the shell (still alive).
  - Run `bash tmox` _again_ to re-enter the detached shell.
  - Type `exit` to close the detached shell.
+
+# Notes
+
+ - Like [Tmux](https://github.com/tmux/tmux), Tmox doesn't save the shell across reboots; the detached shell will evaporate when the system running the detached shell shuts down or reboots.
