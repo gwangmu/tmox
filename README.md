@@ -26,5 +26,5 @@ A very simple example of this peculiar setup would be using a cluster as a non-a
 # Known Issues
 
  - It delivers some random keystrokes upon starting up `vim`.
- - The re-attached shell looks trashy if TTY-manipulating programs (e.g., `vim` or any `ncurses` programs) has been opened even once.
+ - The re-attached shell looks trashy if TTY-manipulating programs (e.g., `vim`) has been opened even once.
  - It doesn't automatically resize the shell when the attached terminal changes its dimensions.
