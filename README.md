@@ -23,13 +23,13 @@ A very simple example of this peculiar setup would be using a cluster as a non-a
 
  - Like [Tmux](https://github.com/tmux/tmux), Tmox doesn't save the shell across reboots; the detached shell will evaporate when the system that runs the detached shell shuts down or reboots.
 
-<details>
-<summary>Click here for technical details.</summary>
-Not yet
-</details>
-
 # Known Issues
 
  - It delivers some random keystrokes upon starting up `vim`.
  - The re-attached shell looks trashy if TTY-manipulating programs (e.g., `vim`) have been opened even once.
  - It doesn't automatically resize the shell when the attached terminal changes its dimensions.
+
+<details>
+<summary>Click here for technical details.</summary>
+Not yet
+</details>
