@@ -15,6 +15,6 @@ A very simple example of this peculiar setup would be using a cluster as a non-a
 # Usage
 
  - Run `bash tmox` to spawn and enter a detached shell.
- - Press "Ctrl-Q" to detach from the shell (still alive).
+ - Press <kbd>Ctrl</kbd>+<kbd>Q</kbd> to detach from the shell (still alive).
  - Run `bash tmox` _again_ to re-enter the detached shell.
  - Type `exit` to close the detached shell.
