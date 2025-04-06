@@ -87,7 +87,7 @@ tmox::attach() {
   exec 20<>$STDIN_PATH
   while IFS= read -srn1 ch; do
     if [[ $ch == "" ]]; then
-      echo >&20
+      printf $'\r' >&20
     elif [[ $ch == $'\cQ' ]]; then
       ps -p $PRINTER_PID >/dev/null 2>&1 && kill $PRINTER_PID
       printf "\n\r"
