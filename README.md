@@ -5,6 +5,7 @@ Tmox spawns a shell detached from the current terminal. The detached shell stays
 ## Why?
 
 Tmox was designed for a peculiar setup as follows.
+
  - You don't have `root`.
  - You can't install any program.
  - You must hold the shell alive even after closing the terminal.
