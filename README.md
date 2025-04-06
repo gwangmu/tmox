@@ -22,6 +22,7 @@ A very simple example of this peculiar setup would be using a cluster as a non-a
 ## Notes
 
  - Like [Tmux](https://github.com/tmux/tmux), Tmox doesn't save the shell across reboots; the detached shell will evaporate when the system that runs the detached shell shuts down or reboots.
+ - It's only about 150 lines! (About 110 lines without comments.) Go play with the code.
 
 <details>
 <summary>Click here for technical details.</summary>
