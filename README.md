@@ -52,7 +52,6 @@ TODO: Using `flock`
 TODO: Getting the current terminal dimension
 
 </details>
-
 <details>
 <summary>Click here for known issues.</summary>
 
