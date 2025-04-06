@@ -8,6 +8,7 @@ Tmox was designed for a peculiar setup as follows.
  - You don't have `root`.
  - You can't install any program.
  - You must hold the shell alive even after closing the terminal.
+
 A very simple example of this peculiar setup would be using a cluster as a non-admin, where (for some reason) you need to keep your shell alive to maintain the connection to one of the cluster nodes but have no privilege to install extra programs and no authority to make _you_ to be able to use the node anyway.
 
 # Usage
