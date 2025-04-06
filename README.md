@@ -33,24 +33,24 @@ While writing Tmox, I discovered some interesting technical details. I hope othe
 
 ### Detached Interactive Shell
 
-TODO: Launching an interactive shell: `bash -i`
-TODO: Detaching a process from the script: `nohup`, `set -m`
+ - TODO: Launching an interactive shell: `bash -i`
+ - TODO: Detaching a process from the script: `nohup`, `set -m`
 
 ### Standard IO Redirection
 
-TODO: Redirecting stdio: regular file, FIFO
-TODO: "Faking" a normal pseudo-terminal: TTY/PTY, `script`
+ - TODO: Redirecting stdio: regular file, FIFO
+ - TODO: "Faking" a normal pseudo-terminal: TTY/PTY, `script`
 
 ### Terminal Interaction
 
-TODO: Forwarding stdin: `read`, `stty raw`, ANSI-C quoting
-TODO: Receiving stdout/stderr: `tail`
-TODO: Handling signals: `trap`, Bash Control Sequence, `kill 0`
+ - TODO: Forwarding stdin: `read`, `stty raw`, ANSI-C quoting
+ - TODO: Receiving stdout/stderr: `tail`
+ - TODO: Handling signals: `trap`, Bash Control Sequence, `kill 0`
 
-### Miscelleneous
+### Miscellaneous
 
-TODO: Using `flock`
-TODO: Getting the current terminal dimension
+ - TODO: Using `flock`
+ - TODO: Getting the current terminal dimension
 
 </details>
 <details>
