@@ -12,9 +12,11 @@ SPID_PATH="$TMOX_ROOT/spid"
 
 # Launch a new session.
 tmox::launch() {
+  # Clean up $TMOX_ROOT.
   mkdir -p $TMOX_ROOT
   rm -rf $TMOX_ROOT/*
 
+  # Use FIFO for stdin and files for stdout/stderr.
   mkfifo $STDIN_PATH
   touch $STDOUT_PATH $STDERR_PATH
 
@@ -22,11 +24,15 @@ tmox::launch() {
   exec 11<>$STDOUT_PATH
   exec 12<>$STDERR_PATH
 
+  # Spawn a shell.
+  # The job scheduling should be enabled ("set -m") in order to make 'nohup'
+  # ignore SIGINT (via Ctrl-C).
   LAUNCH_SHELL='bash'
   LAUNCH_LONG_OPTS=''
   LAUNCH_SHORT_OPTS='-i -s'
 
   if ! which script >/dev/null 2>&1; then
+    # TODO: natively launching a Bash shell doesn't accept '--rcfile'. Why?
     echo "$SCRIPT_NAME: warning: no 'script'. launching as a non-pty."
     nohup $LAUNCH_SHELL $LAUNCH_LONG_OPTS $LAUNCH_SHORT_OPTS <&10 >&11 2>&12 & 
   else
@@ -53,12 +59,15 @@ tmox::attach() {
   ATTACH_PID=$$
   TARGET_BASH_PID=$(cat $SPID_PATH)
 
+  # Hold a flock to prevent another tmox instance to (re)enter.
   exec 100<>$SPID_PATH
   if ! flock -n 100; then
-    echo "$SCRIPT_NAME: error: cannot re-enter tmox."
+    echo "$SCRIPT_NAME: error: tmox being used. cannot enter."
     exit 1
   fi
 
+  # Check if the spawned shell is alive.
+  # If not, it's likely a bug in this script.
   if [[ -z "$TARGET_BASH_PID" ]] || ! ps -p $TARGET_BASH_PID >/dev/null 2>&1; then
     echo "$SCRIPT_NAME: error: background bash not found."
     exit
@@ -66,44 +75,68 @@ tmox::attach() {
 
   echo "$SCRIPT_NAME: attaching..."
 
+  # Turn off SIGINT to prevent users hitting Ctrl-C at the wrong time and
+  # accidentally trash their terminal screen.
   trap '' SIGINT
+
+  # Set the current TTY raw.
+  # This enables accepting all keystrokes, including control sequences. 
   STTY_STATE=$(stty -g)
   stty raw
 
   (
+    # Set this subshell to kill all children when existing.
+    # If children are already dead, this will generate a redundant message.
     trap 'kill 0' EXIT
 
+    # Print the stdout/stderr of the spawned shell.
+    # '-f' option to follow the incremental changes in stdout/stderr files.
     tail --pid $TARGET_BASH_PID -f $STDOUT_PATH &
     STDOUT_PID=$!
     tail --pid $TARGET_BASH_PID -f $STDERR_PATH >&2 &
     STDERR_PID=$!
 
+    # Same as the above trap, but only when the relevant children are alive.
     trap 'ps -p '"$STDOUT_PID"' >/dev/null 2>&1 && kill 0' EXIT
 
+    # Wait until the stdout/stderr is done.
+    # After then, kill the main process to detach this script from the terminal.
     wait $STDOUT_PID
     kill -HUP $ATTACH_PID
   ) &
   PRINTER_PID=$!
 
+  # Forward relevant control sequences to the spawned shell.
   trap 'printf $'"'"'\cC'"'"' >&20' SIGINT
   trap 'printf $'"'"'\c\\'"'"' >&20' SIGQUIT
   trap 'printf $'"'"'\cZ'"'"' >&20' SIGTSTP
+
+  # Make it restore the current TTY on its way out.
   trap 'stty '"$STTY_STATE"'; echo "'"$SCRIPT_NAME"': detached."' EXIT
 
+  # Tap into keystrokes.
+  # For 'read', '-s' to keep it silent (stdout prints the keystrokes anyway),
+  # and '-n1' to accept keystrokes one character at a time.
   exec 20<>$STDIN_PATH
   while IFS= read -srn1 ch; do
     if [[ $ch == "" ]]; then
+      # The 'enter' keystroke yields an empty $ch.
       printf $'\r' >&20
     elif [[ $ch == $'\cQ' ]]; then
+      # 'Ctrl-Q' makes the current TTY detach from the spawned shell.
+      # The spawned shell will stay alive after this.
       ps -p $PRINTER_PID >/dev/null 2>&1 && kill $PRINTER_PID
       printf "\n\r"
       exit 0
     else
+      # Any other keystrokes will simply be forwarded.
       printf "$ch" >&20
     fi
   done
 }
 
+# Attach to the spawned shell.
+# Spawn a new shell if there is none.
 if [[ ! -f $SPID_PATH ]] || ! ps -p $(cat $SPID_PATH) >/dev/null 2>&1; then
   tmox::launch
 fi
