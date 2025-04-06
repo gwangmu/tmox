@@ -31,11 +31,7 @@ tmox::launch() {
   LAUNCH_LONG_OPTS=''
   LAUNCH_SHORT_OPTS='-i -s'
 
-  if ! which script >/dev/null 2>&1; then
-    # TODO: natively launching a Bash shell doesn't accept '--rcfile'. Why?
-    echo "$SCRIPT_NAME: warning: no 'script'. launching as a non-pty."
-    nohup $LAUNCH_SHELL $LAUNCH_LONG_OPTS $LAUNCH_SHORT_OPTS <&10 >&11 2>&12 & 
-  else
+  if which script >/dev/null 2>&1; then
     # Use 'script' to fake the shell as a regular pseudo-terminal.
     # TODO: resize row/col when the terminal changes.
     # For now, it's the initial dimension.
@@ -48,6 +44,11 @@ tmox::launch() {
     nohup script --return --quiet \
       -c "$LAUNCH_SHELL $LAUNCH_LONG_OPTS $LAUNCH_SHORT_OPTS" /dev/null \
       <&10 >&11 2>&12 & 
+  else
+    # If there is no 'script', natively launch a shell.
+    # TODO: natively launching a Bash shell doesn't accept '--rcfile'. Why?
+    echo "$SCRIPT_NAME: warning: no 'script'. launching as a non-pty."
+    nohup $LAUNCH_SHELL $LAUNCH_LONG_OPTS $LAUNCH_SHORT_OPTS <&10 >&11 2>&12 & 
   fi
   BASH_PID=$! 
   echo $BASH_PID > $SPID_PATH 
