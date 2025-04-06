@@ -103,6 +103,7 @@ tmox::attach() {
 
     # Wait until the stdout/stderr is done.
     # After then, kill the main process to detach this script from the terminal.
+    # TODO: suppress the 'Hangup' message when exiting.
     wait $STDOUT_PID
     kill -HUP $ATTACH_PID
   ) &
