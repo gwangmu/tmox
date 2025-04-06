@@ -31,5 +31,29 @@ A very simple example of this peculiar setup would be using a cluster as a non-a
 
 <details>
 <summary>Click here for technical details.</summary>
-Not yet
+# Technical Details
+
+While writing Tmox, I discovered some interesting technical details. I hope other people will find them interesting (or helpful).
+
+## Detached Interactive Shell
+
+TODO: Launching an interactive shell: `bash -i`
+TODO: Detaching a process from the script: `nohup`, `set -m`
+
+## Standard IO Redirection
+
+TODO: Redirecting stdio: regular file, FIFO
+TODO: "Faking" a normal pseudo-terminal: TTY/PTY, `script`
+
+## Terminal Interaction
+
+TODO: Forwarding stdin: `read`, `stty raw`, ANSI-C quoting
+TODO: Receiving stdout/stderr: `tail`
+TODO: Handling signals: `trap`, Bash Control Sequence, `kill 0`
+
+## Miscelleneous
+
+TODO: Using `flock`
+TODO: Getting the current terminal dimension
+
 </details>
