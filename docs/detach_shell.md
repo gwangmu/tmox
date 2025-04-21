@@ -10,4 +10,12 @@ Why is it relevant to `tmox`? Because `tmox` will have to redirect the standard 
 
 But in this case, the solution is **very** simple. You just need the `-i` flag when you launch `bash`. It instructs your `bash` instance to be an interactive shell no matter what. Simple as that.
 
-## 
+## Detaching a process from the launching script
+
+The whole point of this project is creating a shell detached from your terminal (so that it can be attached as you please later at time). But it's not automatically achievable because of how Linux processes work. Basically in Linux, all processes are killed when their parent process is dead. What it means here is that your new `bash` instance will be killed second after you close your terminal (because the shell of your terminal is the parent process of your `bash` process). Notice that launching `bash` as a background process doesn't help because, even if the `bash` instance would run parallel to your terminal shell in that case, it doesn't change the fact that it still belongs to the terminal shell.
+
+What we need here is to spawn a `bash` instance **independent on** the terminal shell. How can this be done? Let's just briefly look at how the soon-to-be-dead parent process purges its children. Before death, it sends a signal called *hang-up* (`SIGHUP`) to its decendants; the signal name is pretty self-explanatory - "Imma hang up," like hanging up a phone call. The decendants receive the signal and commit suicide. What we can do here is that, if we make the decendant defiant and ignore the hang-up signal, theortically it won't kill itself and outlive its parent. 
+
+It's the basic idea, and there is a built-in tool for that; `nohup`. It's a POSIX requirement (c.f., POSIX is a standard OS interface for UNIX-like operating systems) so it can be found in any sane Linux distros. What it does is launch a specified command (i.e., the `<command>` in the `nohup <command>` command-line) and make it ignore the hang-up signal. There should be more techincal details that this simplistic explanation, but I just speculate that what it really does is not just ignoring the signal but intercepting the signal to *re-*parent that soon-to-be-orphan process to a higher ancestor process.
+
+**But,** this is not the end of the story. I discovered that, for some reason, `nohup` 
